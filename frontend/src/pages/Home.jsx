@@ -28,7 +28,7 @@ const Home = () => {
 
   return (
     <div className="max-w-5xl mx-auto mt-8 p-4 bg-white rounded shadow">
-      <h1 className="text-3xl font-bold mb-6">Calendário de Eventos por Mês</h1>
+      <h1 className="text-3xl font-bold mb-6">Calendário de Eventos</h1>
       {mesesOrganizados.map(([mes, eventosMes]) => (
         <div key={mes} className="mb-6">
           <h2 className="text-2xl font-semibold text-blue-700 mb-2 capitalize">{mes}</h2>
