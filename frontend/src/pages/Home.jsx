@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
+import '../components//CalendarioEventos.css'; // Importe o arquivo CSS
 
 const Home = () => {
   const [eventos, setEventos] = useState([]);
@@ -27,12 +28,12 @@ const Home = () => {
   );
 
   return (
-    <div className="max-w-5xl mx-auto mt-8 p-4 bg-white rounded shadow">
-      <h1 className="text-3xl font-bold mb-6">Calendário de Eventos</h1>
+    <div className="home-container">
+      <h1 className="home-title">Calendário de Eventos</h1>
       {mesesOrganizados.map(([mes, eventosMes]) => (
-        <div key={mes} className="mb-6">
-          <h2 className="text-2xl font-semibold text-blue-700 mb-2 capitalize">{mes}</h2>
-          <ul className="list-disc ml-6">
+        <div key={mes} className="mes-container">
+          <h2 className="mes-title">{mes}</h2>
+          <ul className="eventos-list">
             {eventosMes.map(ev => (
               <li key={ev.id}>
                 <strong>{new Date(ev.data).toLocaleDateString()}</strong> – {ev.titulo}{ev.comunidade_clube ? ` (${ev.comunidade_clube})` : ''}

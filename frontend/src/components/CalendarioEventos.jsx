@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import api from '../services/api';
+import './CalendarioEventos.css'; // Importe o arquivo CSS
 
 const CalendarioEventos = () => {
   const [eventos, setEventos] = useState([]);
@@ -41,12 +42,12 @@ const CalendarioEventos = () => {
         dataEv.getFullYear() === date.getFullYear()
       );
     });
-    return diaTemEvento ? 'bg-blue-100 text-blue-800 font-bold' : null;
+    return diaTemEvento ? 'react-calendar__tile--hasEvent' : null;
   };
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 bg-white shadow-md p-6 rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Calendário Visual de Eventos</h2>
+    <div className="calendario-container">
+      <h2 className="calendario-title">Calendário Visual de Eventos</h2>
 
       <Calendar
         onChange={handleDataChange}
@@ -54,12 +55,10 @@ const CalendarioEventos = () => {
         tileClassName={marcarDias}
       />
 
-      <div className="mt-6">
-        <h3 className="text-xl font-semibold mb-2">
-          Eventos do dia {dataSelecionada.toLocaleDateString()}
-        </h3>
+      <div className="eventos-do-dia">
+        <h3>Eventos do dia {dataSelecionada.toLocaleDateString()}</h3>
         {eventosDoDia.length > 0 ? (
-          <ul className="list-disc ml-6">
+          <ul>
             {eventosDoDia.map(ev => (
               <li key={ev.id}>
                 <strong>{ev.titulo}</strong> – {ev.tipo_evento} ({ev.comunidade_clube || 'N/A'})

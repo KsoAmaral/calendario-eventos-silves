@@ -1,0 +1,135 @@
+/* Estilo para o container da Home */
+.home-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Estilo para o título da Home */
+  .home-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #2d3748;
+  }
+  
+  /* Estilo para os meses na Home */
+  .mes-container {
+    margin-bottom: 20px;
+  }
+  
+  .mes-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #4299e1;
+  }
+  
+  /* Estilo para a lista de eventos na Home */
+  .eventos-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .eventos-list li {
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: #f7fafc;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    font-size: 14px;
+    color: #4a5568;
+  }
+  
+  .eventos-list li strong {
+    color: #2d3748;
+  }
+  
+  /* Estilo para o container do calendário */
+  .calendario-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Estilo para o título do calendário */
+  .calendario-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #2d3748;
+  }
+  
+  /* Estilo para o calendário */
+  .react-calendar {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #fff;
+  }
+  
+  .react-calendar__tile {
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .react-calendar__tile--active {
+    background-color: #4299e1;
+    color: #fff;
+  }
+  
+  .react-calendar__tile--now {
+    background-color: #f6f5ff;
+    color: #695CFE;
+  }
+  
+  .react-calendar__tile--hasEvent {
+    background-color: #ecc94b;
+    color: #fff;
+  }
+  
+  /* Estilo para a lista de eventos do dia no calendário */
+  .eventos-do-dia {
+    margin-top: 20px;
+  }
+  
+  .eventos-do-dia h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #2d3748;
+  }
+  
+  .eventos-do-dia ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .eventos-do-dia li {
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: #f7fafc;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    font-size: 14px;
+    color: #4a5568;
+  }
+  
+  .eventos-do-dia li strong {
+    color: #2d3748;
+  }
+  
+  .eventos-do-dia p {
+    font-size: 14px;
+    color: #718096;
+  }

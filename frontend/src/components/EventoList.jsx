@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 
-const EventoList = ({ onEdit, refresh, onDelete }) => {
+const EventoList = ({ refresh, onDelete }) => {
   const [eventos, setEventos] = useState([]);
   const [filtroMes, setFiltroMes] = useState('');
   const [filtroTipo, setFiltroTipo] = useState('');
   const [filtroComunidade, setFiltroComunidade] = useState('');
+  const [eventoEditando, setEventoEditando] = useState(null);
+  const [eventoEditado, setEventoEditado] = useState({});
 
   const fetchEventos = async () => {
     const res = await api.get('/eventos');
@@ -18,7 +20,7 @@ const EventoList = ({ onEdit, refresh, onDelete }) => {
 
   const filtrarEventos = () => {
     return eventos.filter(ev => {
-      const mes = new Date(ev.data).getMonth(); // 0=Janeiro, 1=Fevereiro...
+      const mes = new Date(ev.data).getMonth();
       const filtroMesNumero = filtroMes ? parseInt(filtroMes) : null;
       const correspondeMes = filtroMes === '' || mes === filtroMesNumero;
       const correspondeTipo = filtroTipo === '' || ev.tipo_evento === filtroTipo;
@@ -33,22 +35,49 @@ const EventoList = ({ onEdit, refresh, onDelete }) => {
     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
   ];
 
-  return (
-    <div className="max-w-5xl mx-auto mt-10 bg-white shadow-md p-6 rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Lista de Eventos</h2>
+  const handleEditar = (evento) => {
+    setEventoEditando(evento.id);
+    setEventoEditado(evento);
+  };
 
-      <div className="flex flex-wrap gap-4 mb-6">
-        <div className="flex flex-col">
+  const handleCancelarEdicao = () => {
+    setEventoEditando(null);
+    setEventoEditado({});
+  };
+
+  const handleSalvarEdicao = async () => {
+    try {
+      await api.put(`/eventos/${eventoEditado.id}`, eventoEditado);
+      setEventoEditando(null);
+      setEventoEditado({});
+      fetchEventos();
+    } catch (err) {
+      console.error('Erro ao salvar evento:', err);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEventoEditado({ ...eventoEditado, [name]: value });
+  };
+
+  return (
+    <div className="evento-list-container">
+      <h2 className="evento-list-title">Lista de Eventos</h2>
+
+      {/* Filtros */}
+      <div className="evento-filtros">
+        <div>
           <label>Mês</label>
-          <select className="border p-2 rounded" value={filtroMes} onChange={e => setFiltroMes(e.target.value)}>
+          <select value={filtroMes} onChange={e => setFiltroMes(e.target.value)}>
             <option value="">Todos</option>
             {meses.map((m, idx) => <option key={idx} value={idx}>{m}</option>)}
           </select>
         </div>
 
-        <div className="flex flex-col">
+        <div>
           <label>Tipo de Evento</label>
-          <select className="border p-2 rounded" value={filtroTipo} onChange={e => setFiltroTipo(e.target.value)}>
+          <select value={filtroTipo} onChange={e => setFiltroTipo(e.target.value)}>
             <option value="">Todos</option>
             <option value="EVENTO">Evento</option>
             <option value="FERIADO NACIONAL">Feriado Nacional</option>
@@ -59,34 +88,115 @@ const EventoList = ({ onEdit, refresh, onDelete }) => {
           </select>
         </div>
 
-        <div className="flex flex-col">
+        <div>
           <label>Comunidade/Clube</label>
-          <input type="text" className="border p-2 rounded" value={filtroComunidade} onChange={e => setFiltroComunidade(e.target.value)} placeholder="Digite parte do nome" />
+          <input
+            type="text"
+            value={filtroComunidade}
+            onChange={e => setFiltroComunidade(e.target.value)}
+            placeholder="Digite parte do nome"
+          />
         </div>
       </div>
 
-      <table className="w-full border border-gray-300 rounded table-auto">
+      {/* Tabela de eventos */}
+      <table className="evento-table">
         <thead>
-          <tr className="bg-gray-100 text-left">
-            <th className="p-2 border">Data</th>
-            <th className="p-2 border">Título</th>
-            <th className="p-2 border">Comunidade</th>
-            <th className="p-2 border">Tipo</th>
-            <th className="p-2 border">Obs</th>
-            <th className="p-2 border">Ações</th>
+          <tr>
+            <th style={{ width: '100px' }}>Data</th>
+            <th style={{ width: '150px' }}>Título</th>
+            <th style={{ width: '150px' }}>Comunidade</th>
+            <th style={{ width: '120px' }}>Tipo</th>
+            <th style={{ width: '200px' }}>Obs</th>
+            <th style={{ width: '120px' }}>Ações</th>
           </tr>
         </thead>
         <tbody>
           {filtrarEventos().map(ev => (
-            <tr key={ev.id} className="hover:bg-gray-50">
-              <td className="p-2 border">{new Date(ev.data).toLocaleDateString()}</td>
-              <td className="p-2 border">{ev.titulo}</td>
-              <td className="p-2 border">{ev.comunidade_clube}</td>
-              <td className="p-2 border">{ev.tipo_evento}</td>
-              <td className="p-2 border">{ev.observacao}</td>
-              <td className="p-2 border">
-                <button onClick={() => onEdit(ev)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2 hover:bg-yellow-600">Editar</button>
-                <button onClick={() => handleDelete(ev.id)} className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700">Excluir</button>
+            <tr key={ev.id}>
+              <td>
+                {eventoEditando === ev.id ? (
+                  <input
+                    type="date"
+                    name="data"
+                    value={eventoEditado.data || ''}
+                    onChange={handleChange}
+                    style={{ width: '100%' }}
+                  />
+                ) : (
+                  new Date(ev.data).toLocaleDateString()
+                )}
+              </td>
+              <td>
+                {eventoEditando === ev.id ? (
+                  <input
+                    type="text"
+                    name="titulo"
+                    value={eventoEditado.titulo || ''}
+                    onChange={handleChange}
+                    style={{ width: '100%' }}
+                  />
+                ) : (
+                  ev.titulo
+                )}
+              </td>
+              <td>
+                {eventoEditando === ev.id ? (
+                  <input
+                    type="text"
+                    name="comunidade_clube"
+                    value={eventoEditado.comunidade_clube || ''}
+                    onChange={handleChange}
+                    style={{ width: '100%' }}
+                  />
+                ) : (
+                  ev.comunidade_clube
+                )}
+              </td>
+              <td>
+                {eventoEditando === ev.id ? (
+                  <select
+                    name="tipo_evento"
+                    value={eventoEditado.tipo_evento || 'EVENTO'}
+                    onChange={handleChange}
+                    style={{ width: '100%' }}
+                  >
+                    <option value="EVENTO">Evento</option>
+                    <option value="FERIADO NACIONAL">Feriado Nacional</option>
+                    <option value="FERIADO MUNICIPAL">Feriado Municipal</option>
+                    <option value="RELIGIOSO">Religioso</option>
+                    <option value="ESPORTIVO">Esportivo</option>
+                    <option value="OUTRO">Outro</option>
+                  </select>
+                ) : (
+                  ev.tipo_evento
+                )}
+              </td>
+              <td>
+                {eventoEditando === ev.id ? (
+                  <input
+                    type="text"
+                    name="observacao"
+                    value={eventoEditado.observacao || ''}
+                    onChange={handleChange}
+                    style={{ width: '100%' }}
+                  />
+                ) : (
+                  ev.observacao
+                )}
+              </td>
+              <td className="evento-actions">
+                {eventoEditando === ev.id ? (
+                  <>
+                    <button onClick={handleSalvarEdicao} className="salvar">Salvar</button>
+                    <button onClick={handleCancelarEdicao} className="cancelar">Cancelar</button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => handleEditar(ev)} className="editar">Editar</button>
+                    <button onClick={() => onDelete(ev.id)} className="excluir">Excluir</button>
+                  </>
+                )}
               </td>
             </tr>
           ))}

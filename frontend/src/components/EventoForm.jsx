@@ -39,26 +39,88 @@ const EventoForm = ({ onEventSaved, eventoEditando, limparEdicao }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="evento-form">
       <h2>{evento.id ? 'Editar Evento' : 'Cadastrar Evento'}</h2>
-      <input type="date" name="data" value={evento.data} onChange={handleChange} required />
-      <input type="text" name="titulo" placeholder="Título" value={evento.titulo} onChange={handleChange} required />
-      <input type="text" name="comunidade_clube" placeholder="Comunidade/Clube" value={evento.comunidade_clube} onChange={handleChange} />
-      <textarea name="observacao" placeholder="Observação" value={evento.observacao} onChange={handleChange}></textarea>
-      <select name="tipo_evento" value={evento.tipo_evento} onChange={handleChange} className="w-full border border-gray-300 rounded p-2">
-        <option value="EVENTO">Evento</option>
-        <option value="FERIADO NACIONAL">Feriado Nacional</option>
-        <option value="FERIADO MUNICIPAL">Feriado Municipal</option>
-        <option value="RELIGIOSO">Religioso</option>
-        <option value="ESPORTIVO">Esportivo</option>
-        <option value="OUTRO">Outro</option>
-      </select>
-      <button type="submit">{evento.id ? 'Salvar Alterações' : 'Salvar'}</button>
+
+      {/* Campo: Data */}
+      <div>
+        <label>Data</label>
+        <input
+          type="date"
+          name="data"
+          value={evento.data}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      {/* Campo: Título */}
+      <div>
+        <label>Título</label>
+        <input
+          type="text"
+          name="titulo"
+          placeholder="Título"
+          value={evento.titulo}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      {/* Campo: Comunidade/Clube */}
+      <div>
+        <label>Comunidade/Clube</label>
+        <input
+          type="text"
+          name="comunidade_clube"
+          placeholder="Comunidade/Clube"
+          value={evento.comunidade_clube}
+          onChange={handleChange}
+        />
+      </div>
+
+      {/* Campo: Observação */}
+      <div>
+        <label>Observação</label>
+        <textarea
+          name="observacao"
+          placeholder="Observação"
+          value={evento.observacao}
+          onChange={handleChange}
+        ></textarea>
+      </div>
+
+      {/* Campo: Tipo de Evento */}
+      <div>
+        <label>Tipo de Evento</label>
+        <select
+          name="tipo_evento"
+          value={evento.tipo_evento}
+          onChange={handleChange}
+        >
+          <option value="EVENTO">Evento</option>
+          <option value="FERIADO NACIONAL">Feriado Nacional</option>
+          <option value="FERIADO MUNICIPAL">Feriado Municipal</option>
+          <option value="RELIGIOSO">Religioso</option>
+          <option value="ESPORTIVO">Esportivo</option>
+          <option value="OUTRO">Outro</option>
+        </select>
+      </div>
+
+      {/* Botão: Salvar */}
+      <button type="submit">
+        {evento.id ? 'Salvar Alterações' : 'Salvar'}
+      </button>
+
+      {/* Botão: Cancelar (se estiver editando) */}
       {evento.id && (
-        <button type="button" onClick={() => {
-          setEvento({ data: '', titulo: '', comunidade_clube: '', observacao: '', tipo_evento: 'EVENTO' });
-          limparEdicao();
-        }}>
+        <button
+          type="button"
+          onClick={() => {
+            setEvento({ data: '', titulo: '', comunidade_clube: '', observacao: '', tipo_evento: 'EVENTO' });
+            limparEdicao();
+          }}
+        >
           Cancelar
         </button>
       )}
